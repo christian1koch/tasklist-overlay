@@ -48,7 +48,7 @@ export function TaskItem({ task }: Props) {
         />
       ) : (
         <span
-          onDoubleClick={() => !task.completed && setEditing(true)}
+          onClick={() => !task.completed && setEditing(true)}
           className={cn(
             "flex-1 cursor-pointer text-sm font-medium leading-none",
             task.completed && "text-muted-foreground line-through opacity-50"
