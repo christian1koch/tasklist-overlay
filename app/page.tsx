@@ -1,5 +1,6 @@
 import { getLatestOwner, getTasksByOwner } from "@/lib/actions";
 import { TaskList } from "@/components/task-list";
+import { TaskStreamListener } from "@/components/task-stream-listener";
 
 export default async function Home() {
   const owner = await getLatestOwner();
@@ -7,6 +8,7 @@ export default async function Home() {
 
   return (
     <main className="flex min-h-screen items-start justify-center p-8">
+      <TaskStreamListener />
       <div className="w-full max-w-sm rounded-xl border bg-card p-4 shadow-md">
         {owner ? (
           <>

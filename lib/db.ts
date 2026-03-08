@@ -1,4 +1,5 @@
 import prisma from "./prisma";
+import { notifyTasksChanged } from "./pubsub";
 
 // Owners
 export async function getOwners() {
