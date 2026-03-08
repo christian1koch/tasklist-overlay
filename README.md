@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Tasklist Overlay
 
-## Getting Started
+A Twitch stream tasklist overlay with chat bot integration. Viewers can manage their own task lists directly from chat.
 
-First, run the development server:
+## Features
 
+- **Overlay** (`/`) — displays the tasks of whoever added the last task
+- **Admin** (`/admin`) — manage owners and their tasks manually
+- **Twitch bot** — chat commands to CRUD tasks
+
+## Chat Commands
+
+| Command | Description |
+|---|---|
+| `!addtask <title>` | Add a task (auto-creates owner on first use) |
+| `!done <number>` | Mark task N as complete |
+| `!deltask <number>` | Delete task N |
+| `!tasks` | List your tasks |
+
+## Setup
+
+**1. Prerequisites:** Node.js, Docker
+
+**2. Install dependencies**
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**3. Start the database**
+```bash
+docker compose up -d
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+**4. Configure environment**
+```bash
+cp .env.example .env
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Fill in the values (see table below).
 
-## Learn More
+**5. Run migrations**
+```bash
+npx prisma migrate dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+**6. Start the app**
+```bash
+npm run dev      # Next.js (http://localhost:3000)
+npm run bot      # Twitch bot (separate terminal)
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Environment Variables
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+| Variable | Description |
+|---|---|
+| `DATABASE_URL` | Postgres connection string |
+| `TWITCH_BOT_USERNAME` | Bot's Twitch username |
+| `TWITCH_OAUTH_TOKEN` | Bot's OAuth token (`oauth:...`) |
+| `TWITCH_REFRESH_TOKEN` | OAuth refresh token |
+| `TWITCH_CLIENT_ID` | Twitch app client ID |
+| `TWITCH_CLIENT_SECRET` | Twitch app client secret |
+| `TWITCH_CHANNEL` | Channel the bot listens in |
 
-## Deploy on Vercel
+To get Twitch credentials, create an app at [dev.twitch.tv](https://dev.twitch.tv/console) and follow the OAuth authorization flow.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Tech Stack
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Next.js 16, TypeScript, Tailwind CSS v4, shadcn/ui
+- Prisma 7 + PostgreSQL
+- tmi.js (Twitch bot)
