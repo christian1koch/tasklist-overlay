@@ -33,6 +33,22 @@ export async function handleDelTask(username: string, args: string[]): Promise<s
   return `@${username} Task ${position} deleted.`;
 }
 
+export async function handleTidyUp(username: string): Promise<string> {
+  const owner = await db.getOwnerByName(username);
+  if (!owner) return `@${username} You have no tasks.`;
+  await db.deleteCompletedTasks(owner.id);
+  await notifyTasksChanged();
+  return `@${username} Completed tasks removed!`;
+}
+
+export async function handleClear(username: string): Promise<string> {
+  const owner = await db.getOwnerByName(username);
+  if (!owner) return `@${username} You have no tasks.`;
+  await db.deleteAllTasks(owner.id);
+  await notifyTasksChanged();
+  return `@${username} All tasks cleared!`;
+}
+
 export async function handleTasks(username: string): Promise<string> {
   const tasks = await db.getTasksByOwnerName(username);
   if (tasks.length === 0) return `@${username} You have no tasks. Use !addtask <title> to add one.`;

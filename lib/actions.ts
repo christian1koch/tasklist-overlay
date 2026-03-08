@@ -48,3 +48,17 @@ export async function updateTaskTitle(id: string, title: string) {
   revalidatePath("/");
   revalidatePath("/admin");
 }
+
+export async function tidyUp(ownerId: string) {
+  await db.deleteCompletedTasks(ownerId);
+  await notifyTasksChanged();
+  revalidatePath("/");
+  revalidatePath("/admin");
+}
+
+export async function clearTasks(ownerId: string) {
+  await db.deleteAllTasks(ownerId);
+  await notifyTasksChanged();
+  revalidatePath("/");
+  revalidatePath("/admin");
+}

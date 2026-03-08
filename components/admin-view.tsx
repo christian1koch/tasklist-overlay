@@ -2,11 +2,11 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { addTask, createOwner } from "@/lib/actions";
+import { addTask, createOwner, tidyUp, clearTasks } from "@/lib/actions";
 import { TaskList } from "./task-list";
 
 type Owner = { id: string; name: string };
-type Task = { id: string; title: string; completed: boolean };
+type Task = { id: string; title: string; completed: boolean; completedAt: Date | null; createdAt: Date };
 
 type Props = {
   owners: Owner[];
@@ -91,6 +91,20 @@ export function AdminView({ owners, selectedOwner, tasks }: Props) {
               Add
             </button>
           </form>
+          <div className="flex gap-2">
+            <button
+              onClick={() => tidyUp(selectedOwner.id)}
+              className="rounded-md bg-secondary px-3 py-1.5 text-sm font-medium text-secondary-foreground"
+            >
+              Tidy Up
+            </button>
+            <button
+              onClick={() => clearTasks(selectedOwner.id)}
+              className="rounded-md bg-destructive px-3 py-1.5 text-sm font-medium text-destructive-foreground"
+            >
+              Clear All
+            </button>
+          </div>
         </>
       ) : (
         <p className="text-sm text-muted-foreground">Select or create an owner above.</p>

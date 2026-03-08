@@ -3,6 +3,8 @@ const COMMANDS = [
   { command: "!done <number>", description: "Complete a task" },
   { command: "!deltask <number>", description: "Delete a task" },
   { command: "!tasks", description: "List your tasks" },
+  { command: "!tidyup", description: "Remove completed tasks" },
+  { command: "!clear", description: "Remove all tasks" },
 ];
 
 export function CommandsCard() {

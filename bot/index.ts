@@ -1,7 +1,7 @@
 import "dotenv/config";
 import tmi from "tmi.js";
 import { config } from "./config";
-import { handleAddTask, handleDone, handleDelTask, handleTasks } from "./commands";
+import { handleAddTask, handleDone, handleDelTask, handleTasks, handleTidyUp, handleClear } from "./commands";
 
 const client = new tmi.Client({
   identity: {
@@ -31,6 +31,12 @@ client.on("message", async (channel, tags, message, self) => {
       break;
     case "!tasks":
       response = await handleTasks(username);
+      break;
+    case "!tidyup":
+      response = await handleTidyUp(username);
+      break;
+    case "!clear":
+      response = await handleClear(username);
       break;
   }
 

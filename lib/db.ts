@@ -57,6 +57,14 @@ export async function deleteTask(id: string) {
   return prisma.task.delete({ where: { id } });
 }
 
+export async function deleteCompletedTasks(ownerId: string) {
+  return prisma.task.deleteMany({ where: { ownerId, completed: true } });
+}
+
+export async function deleteAllTasks(ownerId: string) {
+  return prisma.task.deleteMany({ where: { ownerId } });
+}
+
 export async function completeTaskByPosition(ownerName: string, position: number) {
   const incompleteTasks = await prisma.task.findMany({
     where: { owner: { name: ownerName }, completed: false },
