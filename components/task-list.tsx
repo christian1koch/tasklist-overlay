@@ -1,34 +1,38 @@
 import { TaskItem } from "./task-item";
 
 type Task = {
-  id: string;
-  title: string;
-  completed: boolean;
-  completedAt: Date | null;
-  createdAt: Date;
+    id: string;
+    title: string;
+    completed: boolean;
+    completedAt: Date | null;
+    createdAt: Date;
 };
 
 type Props = {
-  tasks: Task[];
+    tasks: Task[];
 };
 
 export function TaskList({ tasks }: Props) {
-  const incomplete = tasks
-    .filter((t) => !t.completed)
-    .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+    const incomplete = tasks
+        .filter((t) => !t.completed)
+        .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
 
-  const completed = tasks
-    .filter((t) => t.completed)
-    .sort((a, b) => (a.completedAt?.getTime() ?? 0) - (b.completedAt?.getTime() ?? 0));
+    const completed = tasks
+        .filter((t) => t.completed)
+        .sort(
+            (a, b) =>
+                (a.completedAt?.getTime() ?? 0) -
+                (b.completedAt?.getTime() ?? 0)
+        );
 
-  return (
-    <div className="flex flex-col gap-1">
-      {incomplete.map((task, i) => (
-        <TaskItem key={task.id} task={task} position={i + 1} />
-      ))}
-      {completed.map((task) => (
-        <TaskItem key={task.id} task={task} position={null} />
-      ))}
-    </div>
-  );
+    return (
+        <div className="flex flex-col">
+            {incomplete.map((task, i) => (
+                <TaskItem key={task.id} task={task} position={i + 1} />
+            ))}
+            {completed.map((task) => (
+                <TaskItem key={task.id} task={task} position={null} />
+            ))}
+        </div>
+    );
 }
