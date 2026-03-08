@@ -11,15 +11,18 @@ export async function getOwnerByName(name: string) {
 }
 
 export async function getLatestOwner() {
-  const task = await prisma.task.findFirst({
-    orderBy: { createdAt: "desc" },
-    include: { owner: true },
-  });
-  return task?.owner ?? null;
+  return prisma.owner.findFirst({ orderBy: { lastActiveAt: "desc" } });
 }
 
 export async function createOwner(name: string) {
   return prisma.owner.create({ data: { name } });
+}
+
+export async function touchOwner(name: string) {
+  return prisma.owner.update({
+    where: { name },
+    data: { lastActiveAt: new Date() },
+  });
 }
 
 // Tasks

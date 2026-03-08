@@ -14,10 +14,11 @@ datasource db {
 }
 
 model Owner {
-  id        String   @id @default(cuid())
-  name      String   @unique
-  createdAt DateTime @default(now())
-  tasks     Task[]
+  id           String   @id @default(cuid())
+  name         String   @unique
+  createdAt    DateTime @default(now())
+  lastActiveAt DateTime @default(now())
+  tasks        Task[]
 }
 
 model Task {

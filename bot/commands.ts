@@ -50,11 +50,9 @@ export async function handleClear(username: string): Promise<string> {
 }
 
 export async function handleTasks(username: string): Promise<string> {
-  const tasks = await db.getTasksByOwnerName(username);
-  if (tasks.length === 0) return `@${username} You have no tasks. Use !addtask <title> to add one.`;
-
-  const list = tasks
-    .map((t, i) => `${i + 1}. ${t.completed ? "✓" : "○"} ${t.title}`)
-    .join(" | ");
-  return `@${username} Tasks: ${list}`;
+  const owner = await db.getOwnerByName(username);
+  if (!owner) return `@${username} You have no tasks yet. Use !addtask <title> to get started.`;
+  await db.touchOwner(username);
+  await notifyTasksChanged();
+  return `@${username} Your tasks are now showing on the overlay!`;
 }
