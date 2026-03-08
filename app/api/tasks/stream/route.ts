@@ -1,6 +1,7 @@
 import { listenForTaskChanges } from "@/lib/pubsub";
 
 export async function GET() {
+  let closed = false;
   const stream = new ReadableStream({
     async start(controller) {
       const encode = (data: string) => new TextEncoder().encode(`data: ${data}\n\n`);
@@ -10,16 +11,17 @@ export async function GET() {
 
       // Subscribe to Postgres NOTIFY — fires whenever tasks change
       const cleanup = await listenForTaskChanges(() => {
-        controller.enqueue(encode("tasks_changed"));
+        if (!closed) controller.enqueue(encode("tasks_changed"));
       });
 
       // Keep-alive ping every 30s to prevent the connection from dropping
       const interval = setInterval(() => {
-        controller.enqueue(encode("ping"));
+        if (!closed) controller.enqueue(encode("ping"));
       }, 30000);
 
       // Called when the client disconnects
       return () => {
+        closed = true;
         clearInterval(interval);
         cleanup();
       };
