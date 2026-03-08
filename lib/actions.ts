@@ -1,52 +1,45 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import prisma from "./prisma";
+import * as db from "./db";
 
 export async function getOwners() {
-  return prisma.owner.findMany({ orderBy: { createdAt: "asc" } });
+  return db.getOwners();
 }
 
 export async function createOwner(name: string) {
-  await prisma.owner.create({ data: { name } });
+  await db.createOwner(name);
   revalidatePath("/admin");
 }
 
 export async function getLatestOwner() {
-  const task = await prisma.task.findFirst({
-    orderBy: { createdAt: "desc" },
-    include: { owner: true },
-  });
-  return task?.owner ?? null;
+  return db.getLatestOwner();
 }
 
 export async function getTasksByOwner(ownerId: string) {
-  return prisma.task.findMany({
-    where: { ownerId },
-    orderBy: { createdAt: "asc" },
-  });
+  return db.getTasksByOwnerId(ownerId);
 }
 
 export async function addTask(title: string, ownerId: string) {
-  await prisma.task.create({ data: { title, ownerId } });
+  await db.createTask(title, ownerId);
   revalidatePath("/");
   revalidatePath("/admin");
 }
 
 export async function toggleTask(id: string, completed: boolean) {
-  await prisma.task.update({ where: { id }, data: { completed } });
+  await db.toggleTask(id, completed);
   revalidatePath("/");
   revalidatePath("/admin");
 }
 
 export async function deleteTask(id: string) {
-  await prisma.task.delete({ where: { id } });
+  await db.deleteTask(id);
   revalidatePath("/");
   revalidatePath("/admin");
 }
 
 export async function updateTaskTitle(id: string, title: string) {
-  await prisma.task.update({ where: { id }, data: { title } });
+  await db.updateTaskTitle(id, title);
   revalidatePath("/");
   revalidatePath("/admin");
 }
