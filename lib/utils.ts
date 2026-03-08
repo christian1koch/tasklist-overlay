@@ -10,3 +10,8 @@ export function requireEnv(key: string): string {
   if (!value) throw new Error(`Missing required env var: ${key}`);
   return value;
 }
+
+export function optionalEnv(key: string): string | undefined {
+  const value = process.env[key];
+  return value ? value : undefined;
+}
