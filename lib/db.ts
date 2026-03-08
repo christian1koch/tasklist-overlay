@@ -45,8 +45,12 @@ export async function updateTaskTitle(id: string, title: string) {
   return prisma.task.update({ where: { id }, data: { title } });
 }
 
+// TODO: add !undone/!unfinished bot command — looks up by position among completed tasks, calls toggleTask(id, false)
 export async function toggleTask(id: string, completed: boolean) {
-  return prisma.task.update({ where: { id }, data: { completed } });
+  return prisma.task.update({
+    where: { id },
+    data: { completed, completedAt: completed ? new Date() : null },
+  });
 }
 
 export async function deleteTask(id: string) {
@@ -54,15 +58,24 @@ export async function deleteTask(id: string) {
 }
 
 export async function completeTaskByPosition(ownerName: string, position: number) {
-  const tasks = await getTasksByOwnerName(ownerName);
-  const task = tasks[position - 1];
+  const incompleteTasks = await prisma.task.findMany({
+    where: { owner: { name: ownerName }, completed: false },
+    orderBy: { createdAt: "asc" },
+  });
+  const task = incompleteTasks[position - 1];
   if (!task) return null;
-  return prisma.task.update({ where: { id: task.id }, data: { completed: true } });
+  return prisma.task.update({
+    where: { id: task.id },
+    data: { completed: true, completedAt: new Date() },
+  });
 }
 
 export async function deleteTaskByPosition(ownerName: string, position: number) {
-  const tasks = await getTasksByOwnerName(ownerName);
-  const task = tasks[position - 1];
+  const incompleteTasks = await prisma.task.findMany({
+    where: { owner: { name: ownerName }, completed: false },
+    orderBy: { createdAt: "asc" },
+  });
+  const task = incompleteTasks[position - 1];
   if (!task) return null;
   return prisma.task.delete({ where: { id: task.id } });
 }

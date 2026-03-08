@@ -4,6 +4,8 @@ type Task = {
   id: string;
   title: string;
   completed: boolean;
+  completedAt: Date | null;
+  createdAt: Date;
 };
 
 type Props = {
@@ -11,12 +13,21 @@ type Props = {
 };
 
 export function TaskList({ tasks }: Props) {
-  const sorted = [...tasks].sort((a, b) => Number(a.completed) - Number(b.completed));
+  const incomplete = tasks
+    .filter((t) => !t.completed)
+    .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+
+  const completed = tasks
+    .filter((t) => t.completed)
+    .sort((a, b) => (a.completedAt?.getTime() ?? 0) - (b.completedAt?.getTime() ?? 0));
 
   return (
     <div className="flex flex-col gap-1">
-      {sorted.map((task) => (
-        <TaskItem key={task.id} task={task} />
+      {incomplete.map((task, i) => (
+        <TaskItem key={task.id} task={task} position={i + 1} />
+      ))}
+      {completed.map((task) => (
+        <TaskItem key={task.id} task={task} position={null} />
       ))}
     </div>
   );
