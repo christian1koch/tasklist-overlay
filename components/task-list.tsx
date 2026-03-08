@@ -1,3 +1,6 @@
+"use client";
+
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { TaskItem } from "./task-item";
 
 type Task = {
@@ -13,6 +16,8 @@ type Props = {
 };
 
 export function TaskList({ tasks }: Props) {
+    const [parent] = useAutoAnimate();
+
     const incomplete = tasks
         .filter((t) => !t.completed)
         .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
@@ -26,7 +31,7 @@ export function TaskList({ tasks }: Props) {
         );
 
     return (
-        <div className="flex flex-col">
+        <div ref={parent} className="flex flex-col">
             {incomplete.map((task, i) => (
                 <TaskItem key={task.id} task={task} position={i + 1} />
             ))}

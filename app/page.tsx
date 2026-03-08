@@ -11,7 +11,7 @@ export default async function Home() {
         <main className="flex aspect-video w-screen items-start justify-center p-8">
             <TaskStreamListener />
             <CommandsCard />
-            {owner && <TasklistCard ownerName={owner.name} tasks={tasks} />}
+            {owner && <TasklistCard key={owner.id} ownerName={owner.name} tasks={tasks} />}
         </main>
     );
 }
