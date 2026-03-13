@@ -30,7 +30,8 @@
     "react-dom": "^19.1.0",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
-    "tmi.js": "^1.8.5"
+    "tmi.js": "^1.8.5",
+    "youtube-chat": "^2.2.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

@@ -3,8 +3,11 @@ import tmi from "tmi.js";
 import { config } from "./config";
 import { handleAddTask, handleDone, handleDelTask, handleTasks, handleTidyUp, handleClear } from "./commands";
 import { resolveTwitchIrcPassword } from "./twitch-auth";
+import { startYouTubeBot } from "./youtube";
 
 async function main() {
+  startYouTubeBot();
+
   const password = await resolveTwitchIrcPassword();
 
   const client = new tmi.Client({

@@ -10,4 +10,7 @@ export const config = {
     clientSecret: requireEnv("TWITCH_CLIENT_SECRET"),
     refreshToken: optionalEnv("TWITCH_REFRESH_TOKEN"),
   },
+  youtube: {
+    channelId: optionalEnv("YOUTUBE_CHANNEL_ID"),
+  },
 };
